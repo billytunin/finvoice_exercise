@@ -1,0 +1,12 @@
+.compare-button {
+  background-color: rgba(48, 230, 48, 1);
+  border-color: rgba(48, 230, 48, 0.5);
+  border-radius: 5px;
+  margin-bottom: 5vh;
+  padding: 1vw;
+  width: 60%;
+  font-size: 1.5em;
+}
+.compare-button[disabled] {
+  background-color: rgba(48, 230, 48, 0.7);
+}
