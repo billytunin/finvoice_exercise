@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setup
+Clone the repo wherever you want.<br />
+Issue a `npm install` (or `yarn` if you prefer) command at project's root directory.
 
 ## Available Scripts
 
@@ -9,60 +11,30 @@ In the project directory, you can run:
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
+Livereload is turned on, meaning that the page will reload if you make any edits.<br />
 You will also see any lint errors in the console.
 
 ### `yarn test`
 
 Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Aswell as `yarn start`, this command also has a livereload feature turned on. Meaning it will automatically reload whenever you make changes to the unit test files. Unit test files are any files within the `src` directory that have the naming convention `***.test.js`.<br />
+The first time you issue this command on the terminal it will run all tests and present you an interactive mode to proceed. From this point on, anytime you change a unit test file, it will livereload only that... meaning it won't run all tests again. If you want to do so press the key "a", just as the interactive dialog says.
 
-### `yarn build`
+## How does it work?
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+When app is up and running, you will see a simple site in which you have 2 big text areas.<br />
+You may type in your JSON objects in these 2 fields and click the "Compare" button to get a "similarity score" from 0 to 1.<br /><br />
+"Similarity score" does take into consideration the order in which the keys or indexes are set in each object.<br />
+This means that comparing:<br />
+`{ "a": [1, 2, 3, 4, 5] }`<br />
+`{ "a": [1, 4, 3, 5, 2] }`<br />
+Will hold a lower score number than:<br />
+`{ "a": [1, 2, 3, 4, 5] }`<br />
+`{ "a": [1, 2, 3, 5, 4] }`<br />
+Even though the arrays contain the same values.<br /><br />
+"Compare" button will be disabled if any of your JSON objects is invalid (that is, something's wrong with your JSON annotation).<br />
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Notes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+I did not include any CSS preprocessor, such as SASS. Because it's not a recommended practice when using `Create React App`, [as stated in the official docs](https://create-react-app.dev/docs/adding-a-sass-stylesheet/).<br />
+If we are worried about CSS scoping (we would like to keep CSS classes only scoped within each component) we could try paradigms like "Styled Components", or use a tool like [Emotion](https://emotion.sh/docs/introduction) . We would probably need to `eject` from `Create React App` for this intent.
