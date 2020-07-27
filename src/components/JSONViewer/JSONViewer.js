@@ -30,7 +30,12 @@ class JSONViewer extends React.Component {
     return (
       <div className="json-viewer-body">
         <p className="json-viewer-title">Write your JSON Object {this.props.objID}</p>
-        <textarea onChange={this.textAreaChanged} rows="15" cols="100"></textarea>
+        <textarea
+          onChange={this.textAreaChanged}
+          rows="15"
+          cols="100"
+          data-testid="json-text-area"
+        />
         <p className={`json-text ${this.state.isValidJSON ? 'valid' : 'invalid'}`}>
           {this.state.isValidJSON ? 'Valid' : 'Invalid'} JSON
         </p>

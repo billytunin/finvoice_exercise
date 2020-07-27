@@ -39,79 +39,65 @@ class App extends React.Component {
       divisor: 0
     }
 
-    debugger
-
-    if (_.isEqual(obj1, obj2)) {
-      score.totalValue++
-      score.divisor++
-    } else {
-      score.divisor--
-      this.recursiveComparisonIteration(obj1, obj2, score)
-    }
-
-    console.log('delete me 9')
-    console.log(score)
-    // Could be NaN
-    console.log(score.totalValue / score.divisor)
+    this.recursiveTest(obj1, obj2, score)
+    alert(
+      `Values analyzed: ${score.divisor}\nMatching values: ${score.totalValue}\nTotal score: ${score.totalValue / score.divisor}`
+    )
   }
 
-  recursiveComparisonIteration(valueA, valueB, scoreObj) {
-    if (_.isEqual(valueA, valueB)) {
-      scoreObj.totalValue++
-    } else {
-      if (Array.isArray(valueA) && Array.isArray(valueB)) {
-        // If the values we are comparing are arrays and they differ in length:
-        // Iterate over the longest array, and apply these length differences negatively
-        // towards the total score by adding divisor counts
-        const lengthDifference = valueA.length - valueB.length
-        if (lengthDifference === 0) {
-          this.iterateArrays(valueA, valueB, scoreObj)
-        } else if (lengthDifference > 0) {
-          scoreObj.divisor += lengthDifference
-          this.iterateArrays(valueA, valueB, scoreObj)
-        } else {
-          scoreObj.divisor -= lengthDifference
-          this.iterateArrays(valueB, valueA, scoreObj)
-        }
-      } else if (_.isPlainObject(valueA) && _.isPlainObject(valueB)) {
-        // If the values we are comparing are objects and they differ in length of keys:
-        // Iterate over the longest object, and apply these length differences negatively
-        // towards the total score by adding divisor counts
-        const lengthDifference = Object.keys(valueA).length - Object.keys(valueB).length
-        if (lengthDifference === 0) {
-          this.iterateObjects(valueA, valueB, scoreObj)
-        } else if (lengthDifference > 0) {
-          scoreObj.divisor += lengthDifference
-          this.iterateObjects(valueA, valueB, scoreObj)
-        } else {
-          scoreObj.divisor -= lengthDifference
-          this.iterateObjects(valueB, valueA, scoreObj)
-        }
+  recursiveTest(obj1, obj2, scoreObj) {
+    _.forEach(obj1, (iteratedValue, indexOrKey) => {
+      if (obj2[indexOrKey] === undefined) {
+        // We are inspecting an undefined value here because:
+        // 1) Object: the specified key doesn't exist
+        // 2) Array: we are inspecting a value outside array's length
+        // Increment divisor count and nothing else, this counts negatively towards total score.
+        scoreObj.divisor++
+        return
       }
-    }
-    scoreObj.divisor++
-  }
 
-  iterateArrays(arrayA, arrayB, scoreObj) {
-    arrayA.forEach(valA => {
-      arrayB.forEach(valB => this.recursiveComparisonIteration(valA, valB, scoreObj))
+      if (_.isEqual(iteratedValue, obj2[indexOrKey])) {
+        // We found matching values!
+        scoreObj.totalValue++
+        scoreObj.divisor++
+      } else if (_.isPlainObject(iteratedValue)) {
+        if (_.isPlainObject(obj2[indexOrKey])) {
+          // If the values we are comparing are objects and they differ in length of keys,
+          // iterate over the longest object.
+          const lengthDifference = Object.keys(iteratedValue).length - Object.keys(obj2[indexOrKey]).length
+          if (lengthDifference < 0) {
+            this.recursiveTest(obj2[indexOrKey], iteratedValue, scoreObj)
+          } else {
+            this.recursiveTest(iteratedValue, obj2[indexOrKey], scoreObj)
+          }
+        } else {
+          // One value was an object, the other one wasn't. Non-matching values
+          scoreObj.divisor++
+        }
+      } else if (Array.isArray(iteratedValue)) {
+        if (Array.isArray(obj2[indexOrKey])) {
+          // If the values we are comparing are arrays and they differ in length of values,
+          // iterate over the longest array.
+          const lengthDifference = iteratedValue.length - obj2[indexOrKey].length
+          if (lengthDifference < 0) {
+            this.recursiveTest(obj2[indexOrKey], iteratedValue, scoreObj)
+          } else {
+            this.recursiveTest(iteratedValue, obj2[indexOrKey], scoreObj)
+          }
+        } else {
+          // One value was an array, the other one wasn't. Non-matching values
+          scoreObj.divisor++
+        }
+      } else {
+        // Non-matching values which, in addition, were not an object or an array... so there's nothing more
+        // to recursively check
+        scoreObj.divisor++
+      }
     })
   }
 
-  iterateObjects(objA, objB, scoreObj) {
-    for (let keyA in objA) {
-      for (let keyB in objB) {
-        if (keyA === keyB) {
-          this.recursiveComparisonIteration(objA[keyA], objB[keyB], scoreObj)
-          // We can stop the loop because we already found the keys we wanted to compare
-          break
-        }
-      }
-    }
-  }
-
   compareButtonClicked = () => {
-    const result = this.compareObjects(this.state[ObjOneID], this.state[ObjTwoID])
+    this.compareObjects(this.state[ObjOneID], this.state[ObjTwoID])
   }
 
   render() {

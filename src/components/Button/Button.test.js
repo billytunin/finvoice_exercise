@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import App from './App';
+import CompareButton from './Button';
 
-test('component is rendered correctly', () => {
-  const app = render(<App />)
-  expect(app).not.toBe(undefined)
+test('compare button is rendered with caption', () => {
+  const { getByText } = render(<CompareButton />)
+  expect(getByText('Compare')).toBeDefined()
 });
